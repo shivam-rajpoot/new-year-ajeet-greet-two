@@ -88,6 +88,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+    let nameLetters = [];        // screen par dikhne wale letters
+let letters = "AJEET".split("");
+let letterIndex = 0;
+let startX;
 /* 🌌 Galaxy Stars */
 let stars=[];
 for(let i=0;i<300;i++){
@@ -148,13 +152,13 @@ class Firework{
 }
 
 /* ✨ Draw Letter */
-function drawLetter(letter,x,y){
-    ctx.font="bold 80px Arial";
-    ctx.fillStyle="gold";
-    ctx.shadowColor="gold";
-    ctx.shadowBlur=30;
-    ctx.fillText(letter,x,y);
-    ctx.shadowBlur=0;
+function drawLetter(letter, x, y) {
+    ctx.font = "bold 80px Arial";
+    ctx.fillStyle = "gold";
+    ctx.shadowColor = "gold";
+    ctx.shadowBlur = 30;
+    ctx.fillText(letter, x, y);
+    ctx.shadowBlur = 0;
 }
 
 function animate(){
@@ -173,24 +177,52 @@ function animate(){
         f.update();
         f.draw();
     });
-
+// 🔠 Naam ke sab letters redraw honge
+    nameLetters.forEach(l => {
+        drawLetter(l.char, l.x, l.y);
+    });
     requestAnimationFrame(animate);
 }
 animate();
 
 /* 🔥 Letter Firework Sequence */
-let letterX=canvas.width/2-160;
-setInterval(()=>{
-    if(letterIndex<letters.length){
-        let fx=new Firework(letterX,canvas.height/3);
-        fireworks.push(fx);
-        setTimeout(()=>{
-            drawLetter(letters[letterIndex],letterX,canvas.height/3+30);
-            letterIndex++;
-            letterX+=80;
-        },700);
-    }
-},1500);
+function startNameSequence() {
+    nameLetters = [];
+    letterIndex = 0;
+    startX = canvas.width / 2 - 160;
+
+    let interval = setInterval(() => {
+        if (letterIndex < letters.length) {
+
+            let fx = new Firework(startX, canvas.height / 3);
+            fireworks.push(fx);
+
+            setTimeout(() => {
+                nameLetters.push({
+                    char: letters[letterIndex],
+                    x: startX,
+                    y: canvas.height / 3 + 30
+                });
+
+                letterIndex++;
+                startX += 80;
+
+            }, 700);
+
+        } else {
+            clearInterval(interval);
+
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                nameLetters = [];
+                startNameSequence(); // 🔁 repeat
+            }, 2500);
+        }
+    }, 1500);
+}
+
+// 🚀 start animation loop
+startNameSequence();
 
 function playMusic(){
     document.getElementById("bgm").play();
