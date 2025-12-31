@@ -102,10 +102,7 @@ for(let i=0;i<300;i++){
     });
 }
 
-/* 🎆 Fireworks */
-let fireworks=[];
-let letters="AJEET".split("");
-let letterIndex=0;
+
 
 class Firework{
     constructor(targetX,targetY){
@@ -213,7 +210,7 @@ function startNameSequence() {
             clearInterval(interval);
 
             setTimeout(() => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
                 nameLetters = [];
                 startNameSequence(); // 🔁 repeat
             }, 2500);
